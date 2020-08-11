@@ -53,20 +53,20 @@ def get_device_info(ip):
     commands = ('pools', 'summary', 'devdetails', 'devs', 'temps', 'fans')
     device = {}
     for command in commands:
-        device[command.upper()] = braiins_Socket(command, ip)[command.upper()]
+        device[command.upper()] =  braiins_Socket(command, ip)[command.upper()]
     return device
 
-def get_all_info():
+async def get_all_info():
     ips = list(map(lambda x: f'192.168.0.{x}', range(30, 35)))
     all_device={}
     for ip in ips:
-        all_device[ip]=get_device_info(ip)
+        all_device[ip]=  get_device_info(ip)
     return all_device
 
 def get_info_for_ip(ip):
     device={}
     try:
-        device[ip]=get_device_info(ip)
+        device[ip]= get_device_info(ip)
         return device
     except Exception as e:
         return {'STATUS':'E',"msg":"ip not found"}
