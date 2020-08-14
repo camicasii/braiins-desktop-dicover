@@ -1,2 +1,5 @@
 .idea
 __pycache__
+api_env/
+ips.csv
+

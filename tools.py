@@ -1,7 +1,8 @@
 import socket
 import json
-import os
-import asyncio
+import pandas as pd
+import numpy as np
+
 
 def braiins_Socket(command, ip):
     server_address = (ip, 4028)
@@ -25,43 +26,30 @@ def braiins_Socket(command, ip):
         return False
 
 
-def ip_handler(subnet):
-    ip_end = list(range(1, ))
-    ip_red = []
-    for i in ip_end:
-        net = subnet.split(".")
-        net[len(net) - 1] = i
-        net_ip = ".".join(map(str, net))
-        # ping ip
-        alive = os.system('ping -c 1 -W 1 ' + net_ip)
-        if alive == 0:
-            ip_red.append(".".join(map(str, net)))
-    return ip_red
-
-
-def discover(subnet:str):
-    ip_red = ip_handler(subnet)
-    antminer= list(map(lambda x: braiins_Socket('fans', x), ip_red))
-    return antminer
-
-def discover(subnet:list):
-    ip_red = subnet
-    antminer = list(map(lambda x: braiins_Socket('fans', x), ip_red))
-    return antminer
-
 def get_device_info(ip):
-    commands = ('pools', 'summary', 'devdetails', 'devs', 'temps', 'fans')
-    device = {}
-    for command in commands:
-        device[command.upper()] =  braiins_Socket(command, ip)[command.upper()]
-    return device
+    try:
+        commands = ('pools', 'summary', 'devdetails', 'devs', 'temps', 'fans')
+        device = {}
+        for command in commands:
+            device[command.upper()] =  braiins_Socket(command, ip)[command.upper()]
+        return device
+    except Exception as e:
+        return {'STATUS':'E',"msg":"ip not found"}
 
-async def get_all_info():
-    ips = list(map(lambda x: f'192.168.0.{x}', range(30, 35)))
+def get_all_info_handler(ips:pd.DataFrame):
     all_device={}
-    for ip in ips:
+
+    for ip in ips['ip']:
         all_device[ip]=  get_device_info(ip)
     return all_device
+
+def get_all_info():
+    ips_df=pd.read_csv('./ips.csv')
+    #df=pd.DataFrame(np.array(['192.168.0.10']),columns=['ip'])
+    #df=ips_df.append(df,ignore_index=True)
+    devices_info=get_all_info_handler(ips_df)
+    return devices_info
+
 
 def get_info_for_ip(ip):
     device={}
@@ -70,3 +58,6 @@ def get_info_for_ip(ip):
         return device
     except Exception as e:
         return {'STATUS':'E',"msg":"ip not found"}
+
+if __name__=="__main__":
+    get_all_info()
