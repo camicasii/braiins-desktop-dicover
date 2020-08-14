@@ -27,8 +27,8 @@ def get_info_ip(ip:str):
 if __name__=="__main__":
     #python3 -m venv ./virtual_environments
     #pip freeze > requirements.txt
-    #pip freeze > requirements.txt
-    #pip freeze > requirements.txt
+    #pip  install -r requirements.txt
+
 
     os.system('uvicorn --port 3002 main:app')
 

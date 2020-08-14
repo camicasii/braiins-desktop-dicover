@@ -2,4 +2,6 @@
 __pycache__
 api_env/
 ips.csv
+db_sqlite.py
+discover_test.py
 
