@@ -4,12 +4,10 @@ import numpy as np
 import pandas as pd
 import sys
 
-import asyncio
-
 def save_csv(df:pd.DataFrame):
     df.to_csv('./ips.csv',index=False,header=True)
 
-async  def discover_handler(subnet):
+def discover_handler(subnet):
     try:
         ips_all=scan_ips(subnet)
         ips_devices=[]
@@ -26,10 +24,8 @@ async  def discover_handler(subnet):
         return False
 
 def discover(subnet):
-    devices=discover_handler(subnet)
+    devices= discover_handler(subnet)
     print(devices)
-
-
 
 if __name__ == "__main__":
     discover(sys.argv[1])

@@ -1,7 +1,7 @@
 import socket
 import json
 import pandas as pd
-import numpy as np
+
 
 
 def braiins_Socket(command, ip):
@@ -34,19 +34,19 @@ def get_device_info(ip):
             device[command.upper()] =  braiins_Socket(command, ip)[command.upper()]
         return device
     except Exception as e:
-        return {'STATUS':'E',"msg":"ip not found"}
+        #return {'STATUS':'E',"msg":"ip not found"}
+        return False
 
 def get_all_info_handler(ips:pd.DataFrame):
     all_device={}
-
     for ip in ips['ip']:
-        all_device[ip]=  get_device_info(ip)
+        response = get_device_info(ip)
+        if response:
+            all_device[ip]=response
     return all_device
 
 def get_all_info():
-    ips_df=pd.read_csv('./ips.csv')
-    #df=pd.DataFrame(np.array(['192.168.0.10']),columns=['ip'])
-    #df=ips_df.append(df,ignore_index=True)
+    ips_df= pd.read_csv('./ips.csv')
     devices_info=get_all_info_handler(ips_df)
     return devices_info
 
